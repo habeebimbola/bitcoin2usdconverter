@@ -9,10 +9,8 @@ import mk.webfactory.demo.task.bitcoinConverter.domain.RateBetweenWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -31,7 +29,7 @@ public class BitCoinUSDConverterController {
     private final Logger logger = LoggerFactory.getLogger(BitCoinUSDConverterController.class);
     private final RestTemplate restTemplate;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private double currentExchangeRate = 8200d;
 
     @Value("${exchangeRateURL}")
@@ -50,11 +48,11 @@ public class BitCoinUSDConverterController {
     }
 
     @RequestMapping(value="/rateBetween", method = RequestMethod.POST)
-    public ResponseEntity<RateBetweenWrapper> getRateBetweenRange( @RequestBody() DateRate dateRate) throws JsonProcessingException {
+    public ResponseEntity<RateBetweenWrapper> getRateBetweenRange( @RequestBody() DateRateRange dateRateRange) throws JsonProcessingException {
 
         Map params = new HashMap<>();
-        params.put("startDate", dateRate.fromDate);
-        params.put("endDate", dateRate.endDate);
+        params.put("startDate", dateRateRange.fromDate);
+        params.put("endDate", dateRateRange.endDate);
 
         ResponseEntity<JsonNode> responseEntity = this.restTemplate.getForEntity(this.rateBetweenDatesURL, JsonNode.class, params);
 
@@ -73,14 +71,8 @@ public class BitCoinUSDConverterController {
         ResponseEntity<ExchangeRateWrapper> rate =  this.restTemplate.getForEntity(URI.create(rateURL), ExchangeRateWrapper.class);
         this.currentExchangeRate = rate.getBody().getBpi().getUsd().getRate_float();
     }
-
-    @InitBinder
-    public void dateFormatter(WebDataBinder webDataBinder){
-        webDataBinder.addCustomFormatter(new DateFormatter());
-    }
-
     @JsonSerialize
-    private static class DateRate{
+    private static class DateRateRange {
 
         String fromDate;
         String endDate;
