@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import mk.webfactory.demo.task.bitcoinConverter.domain.base.BaseEntity;
 
 @JsonSerialize
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"code","rate","description","rate_float"})
-public class Usd {
+public class Usd extends BaseEntity {
     @JsonProperty("code")
     private String code;
     @JsonProperty("rate")
