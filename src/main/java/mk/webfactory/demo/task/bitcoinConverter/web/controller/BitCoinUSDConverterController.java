@@ -1,4 +1,4 @@
-package mk.webfactory.demo.task.bitcoinConverter.controller;
+package mk.webfactory.demo.task.bitcoinConverter.web.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
